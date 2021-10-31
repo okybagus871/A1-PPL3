@@ -16,6 +16,7 @@ var err error
 
 func main() {
 	dsn := "host=localhost user=postgres password=admin dbname=user port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	//dsn := "host=localhost user=postgres password=howl94 dbname=user port=5432 sslmode=disable TimeZone=Asia/Jakarta"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {

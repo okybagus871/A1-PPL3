@@ -10,7 +10,9 @@ import (
 var RepoErr = errors.New("Unable to handle Repo Request")
 
 type Repository interface {
-	CreateUser(ctx context.Context, user userProfile) error
+	SignUp(ctx context.Context, user userProfile) error
+	CheckEmail(ctx context.Context, email string) (bool, error)
+	CheckUsername(ctx context.Context, username string) (bool, error)
 }
 
 type repo struct {
@@ -25,7 +27,7 @@ func NewRepo(db *sql.DB, logger log.Logger) Repository {
 	}
 }
 
-func (r *repo) CreateUser(ctx context.Context, user userProfile) error {
+func (r *repo) SignUp(ctx context.Context, user userProfile) error {
 	sql := `INSERT INTO users (username, name, password, created_date, email)
 			VALUES ($1, $2, $3, $4, $5)`
 
@@ -40,4 +42,26 @@ func (r *repo) CreateUser(ctx context.Context, user userProfile) error {
 	}
 
 	return nil
+}
+
+func (r *repo) CheckEmail(ctx context.Context, email string) (bool, error){
+	var exists bool
+
+	sql := `SELECT EXISTS(SELECT 1 FROM users WHERE email=$1);`
+
+	if err := r.db.QueryRow(sql, email).Scan(&exists); err != nil {
+		return false, nil
+	}
+	return exists, nil
+}
+
+func (r *repo) CheckUsername(ctx context.Context, username string) (bool, error){
+	var exists bool
+
+	sql := `SELECT EXISTS(SELECT 1 FROM users WHERE username=$1);`
+
+	if err := r.db.QueryRow(sql, username).Scan(&exists); err != nil {
+		return false, err
+	}
+	return exists, nil
 }

@@ -2,7 +2,7 @@ package user
 
 import (
 	"context"
-	"encoding/json"
+	//"encoding/json"
 	//"log"
 	"net/http"
 	"github.com/gorilla/mux"
@@ -19,21 +19,13 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
 		decodeSignUpReq,
 		encodeResponse,
 	))
-
+	
+	r.Methods("GET").Path("/check-username/{username}").Handler(httptransport.NewServer(
+		endpoints.CheckUsernameAvailability,
+		decodeCheckUsernameReq,
+		encodeResponse,
+	))
 	return r
-}
-
-func decodeSignUpReq(ctx context.Context, r *http.Request)(interface{}, error){
-	var req SignUpReq
-	err := json.NewDecoder(r.Body).Decode(&req.User)
-	if err != nil {
-		return nil, err
-	}
-	return req, nil
-}
-
-func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
 }
 
 func commonMiddleware(next http.Handler) http.Handler {

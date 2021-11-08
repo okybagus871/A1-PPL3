@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type userProfile struct {
+type User struct {
 		UserID         uint32    `json:"user_id,omitempty"`
 		Username       string    `json:"username,omitempty"`
 		Email          string    `json:"email,omitempty"`

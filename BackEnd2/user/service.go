@@ -12,7 +12,7 @@ import (
 
 type UserService interface {
 	//masukin modul
-	SignUp(ctx context.Context, user userProfile) (*userProfile, error)
+	SignUp(ctx context.Context, user User) (*User, error)
 	CheckUsernameAvailability(ctx context.Context, username string) (string, error)
 }
 
@@ -31,7 +31,7 @@ func NewService(rep Repository, logger log.Logger) UserService {
 
 var ErrEmpty = errors.New("empty string")
 
-func (s *userService) SignUp(ctx context.Context, user userProfile) (*userProfile, error) {
+func (s *userService) SignUp(ctx context.Context, user User) (*User, error) {
  	logger := log.With(s.logger, "method", "CreateUser")
 
 	// uuid, _ := uuid.NewUUID()

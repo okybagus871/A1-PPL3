@@ -10,7 +10,7 @@ import (
 var RepoErr = errors.New("Unable to handle Repo Request")
 
 type Repository interface {
-	SignUp(ctx context.Context, user userProfile) error
+	SignUp(ctx context.Context, user User) error
 	CheckEmail(ctx context.Context, email string) (bool, error)
 	CheckUsername(ctx context.Context, username string) (bool, error)
 }
@@ -27,7 +27,7 @@ func NewRepo(db *sql.DB, logger log.Logger) Repository {
 	}
 }
 
-func (r *repo) SignUp(ctx context.Context, user userProfile) error {
+func (r *repo) SignUp(ctx context.Context, user User) error {
 	sql := `INSERT INTO users (username, name, password, created_date, email)
 			VALUES ($1, $2, $3, $4, $5)`
 

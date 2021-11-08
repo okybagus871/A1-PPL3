@@ -24,7 +24,7 @@ func makeSignUpEndpoint (s UserService) endpoint.Endpoint {
    return func(ctx context.Context, request interface{}) (interface{}, error) {
 	   req := request.(SignUpReq)
 
-	   _, err := s.SignUp(ctx, req.User)
+	   _, err := s.SignUp(ctx, req.UserReq)
 	   if err != nil {
 		   return DefaultResponse{Status:true, Message: "Some msg error"}, err
 	   }
@@ -34,7 +34,7 @@ func makeSignUpEndpoint (s UserService) endpoint.Endpoint {
 
 func decodeSignUpReq(ctx context.Context, r *http.Request)(interface{}, error){
 	var req SignUpReq
-	err := json.NewDecoder(r.Body).Decode(&req.User)
+	err := json.NewDecoder(r.Body).Decode(&req.UserReq)
 	if err != nil {
 		return nil, err
 	}

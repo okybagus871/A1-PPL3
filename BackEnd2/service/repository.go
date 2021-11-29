@@ -1,16 +1,17 @@
-package user
+package service
 
 import (
 	"context"
 	"database/sql"
 	"github.com/go-kit/log"
 	"errors"
+	"BackEnd/datastruct"
 )
 
 var RepoErr = errors.New("Unable to handle Repo Request")
 
 type Repository interface {
-	SignUp(ctx context.Context, user User) error
+	SignUp(ctx context.Context, user datastruct.User) error
 	CheckEmail(ctx context.Context, email string) (bool, error)
 	CheckUsername(ctx context.Context, username string) (bool, error)
 }
@@ -27,7 +28,7 @@ func NewRepo(db *sql.DB, logger log.Logger) Repository {
 	}
 }
 
-func (r *repo) SignUp(ctx context.Context, user User) error {
+func (r *repo) SignUp(ctx context.Context, user datastruct.User) error {
 	sql := `INSERT INTO users (username, name, password, created_date, email)
 			VALUES ($1, $2, $3, $4, $5)`
 

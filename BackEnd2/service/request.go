@@ -1,13 +1,13 @@
-package user
+package service
 
 import (
-	//"mime/multipart"
+	"BackEnd/datastruct"
 )
 
 type (
 	// Request format
 	SignUpReq struct {
-		UserReq User
+		UserReq datastruct.User
 	}
 
 	CheckUsernameReq struct {

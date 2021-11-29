@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"BackEnd/user"
+	"BackEnd/service"
 
 	"github.com/go-kit/kit/log"
 	_ "github.com/lib/pq"
@@ -21,15 +21,8 @@ var db *sql.DB
 var err error
 
 func main(){
-	// dsn := "host=localhost user=postgres password=howl94 dbname=user port=5432 sslmode=disable TimeZone=Asia/Jakarta"
-	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	// if err != nil {
-	// 	log.Fatal("DB error")
-	// }
-
-	// db.AutoMigrate(&service.UserProfile{})
-	dsn := "host=localhost user=postgres password=howl94 dbname=user port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	
+	dsn := "host=localhost user=postgres password=admin dbname=user port=5432 sslmode=disable TimeZone=Asia/Jakarta"
 	var httpAddr = flag.String("http", ":8080", "http listen address")
 
 	var logger log.Logger
@@ -60,15 +53,15 @@ func main(){
 
 	flag.Parse()
 	ctx := context.Background()
-	var srv user.UserService
+	var srv service.UserService
 	{
-		repository := user.NewRepo(db, logger)
+		repository := service.NewRepo(db, logger)
 
-		srv = user.NewService(repository, logger)
+		srv = service.NewService(repository, logger)
 	}
 
 	errs := make(chan error)
-	endpoints := user.MakeEndpoints(srv)
+	endpoints := service.MakeEndpoints(srv)
 
 	go func() {
 		c := make(chan os.Signal, 1)
@@ -78,7 +71,7 @@ func main(){
 
 	go func() {
 		fmt.Println("listening on port", *httpAddr)
-		handler := user.NewHTTPServer(ctx, endpoints)
+		handler := service.NewHTTPServer(ctx, endpoints)
 		errs <- http.ListenAndServe(*httpAddr, handler)
 	}()
 

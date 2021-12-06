@@ -28,10 +28,9 @@ export default function CheckEmailToken({ navigation }) {
                         <Text style={styles.titleText}>Check your email</Text>
                         <View style={styles.subtitleContainer}>
                             <Text style={styles.subtitle}>
-                                We have sent a verify account {'\n'}instruction to
+                                We have sent a verify account {'\n'}instruction to your email
                             </Text>
                             <Gap height={10} />
-                            <Text style={styles.subtitleEmail}>okkybagus87@gmail.com</Text>
                         </View>
                     </View>
                     <Gap height={10} />

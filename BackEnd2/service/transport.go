@@ -31,7 +31,14 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
 		decodeCheckEmailReq,
 		encodeResponse,
 	))
-	
+
+	mailR := r.PathPrefix("/verify").Methods(http.MethodPost).Subrouter()
+	mailR.Path("/mail").Handler(httptransport.NewServer(
+		endpoints.ValidateEmail,
+		decodeValidateEmailReq,
+		encodeResponse,
+	))
+
 	return r
 }
 

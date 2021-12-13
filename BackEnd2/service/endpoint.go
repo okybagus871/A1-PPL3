@@ -14,6 +14,7 @@ type Endpoints struct {
 	SignUp endpoint.Endpoint
 	CheckUsernameAvailability endpoint.Endpoint
 	CheckEmailAvailability endpoint.Endpoint
+	ValidateEmail endpoint.Endpoint
 }
 
 func MakeEndpoints(s UserService) Endpoints {
@@ -21,6 +22,7 @@ func MakeEndpoints(s UserService) Endpoints {
 		SignUp: makeSignUpEndpoint(s),
 		CheckUsernameAvailability: makeCheckUsernameEndpoint(s),
 		CheckEmailAvailability: makeCheckEmailEndpoint(s),
+		ValidateEmail: makeValidateEmailEndpoint(s),
 	}
 }
 
@@ -90,6 +92,29 @@ func decodeCheckEmailReq(ctx context.Context, r *http.Request)(interface{}, erro
 
 	req.Email = email
 	fmt.Println(email)
+	return req, nil
+}
+
+func makeValidateEmailEndpoint (s UserService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error){
+		req := request.(ValidateEmailReq)
+
+		ret, err := s.ValidateEmail(ctx,req.Email,req.OTP)
+		if err != nil {
+			return DefaultResponse{Status:false, Message: "OTP is not valid"}, err
+		} else if ret == true && err == nil {
+			return DefaultResponse{Status:true, Message: "Email verified"}, err
+		}
+		return DefaultResponse{Status:false, Message: "OTP is not valid"}, err
+	}
+}
+
+func decodeValidateEmailReq(ctx context.Context, r *http.Request)(interface{}, error){
+	var req ValidateEmailReq
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
 	return req, nil
 }
 

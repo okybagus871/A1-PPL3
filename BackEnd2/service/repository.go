@@ -18,6 +18,8 @@ type Repository interface {
 	SignUp(ctx context.Context, user datastruct.User) error
 	CheckUsername(ctx context.Context, username string) (bool, error)
 	CheckEmail(ctx context.Context, email string) (bool, error)
+	ValidateEmail(ctx context.Context, email string, otp uint32) (uint32, error)
+	UpdateEmailVerified(ctx context.Context, email string) error
 }
 
 type repo struct {
@@ -99,4 +101,34 @@ func (r *repo) CheckEmail(ctx context.Context, email string) (bool, error){
 	}
 	level.Debug(r.logger).Log("msg", "finish CheckEmail")
 	return exists, nil
+}
+
+func (r *repo) ValidateEmail(ctx context.Context, email string, otp uint32) (uint32, error){
+	var otp_sys uint32
+	level.Debug(r.logger).Log("msg", "start run ValidateEmail")
+
+	sql:= `SELECT otp FROM users WHERE email = $1 LIMIT 1;`
+	err := r.db.QueryRow(sql, email).Scan(&otp_sys)
+
+	if err != nil {
+		return 0, err
+	}
+	
+	level.Debug(r.logger).Log("msg", "finish ValidateEmail")
+	return otp_sys, nil
+}
+
+func (r *repo) UpdateEmailVerified(ctx context.Context, email string) error {
+	level.Debug(r.logger).Log("msg", "start run UpdateEmailVerified")
+
+	email_verified := true
+	sql := `UPDATE users SET email_verified = $1 WHERE email = $2;`
+	_, err := r.db.ExecContext(ctx, sql, email_verified, email)
+
+	if err != nil {
+		return err
+	}
+
+	level.Debug(r.logger).Log("msg", "finish UpdateEmailVerified")
+	return nil
 }

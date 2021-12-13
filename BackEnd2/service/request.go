@@ -19,6 +19,11 @@ type (
 		Email string `json:"email,omitempty"`
 	}
 
+	ValidateEmailReq struct {
+		Email	string `json:"email"`
+		OTP		uint32 `json:"otp"`		
+	}
+
 	// Response format
 	DefaultResponse struct {
 		Status  bool   `json:"status"`

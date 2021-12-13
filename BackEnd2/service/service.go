@@ -17,6 +17,7 @@ type UserService interface {
 	SignUp(ctx context.Context, user datastruct.User) (*datastruct.User, error)
 	CheckUsernameAvailability(ctx context.Context, username string) (bool, error)
 	CheckEmailAvailability(ctx context.Context, email string)(bool, error)
+	ValidateEmail(ctx context.Context, email string, otp uint32) (bool, error)
 }
 
 type userService struct{
@@ -80,6 +81,29 @@ func (s *userService) CheckEmailAvailability(ctx context.Context, email string)(
 	}
 
 	logger.Log("email checked")
+	return true, nil
+}
+
+func (s *userService) ValidateEmail(ctx context.Context, email string, otp uint32) (bool, error) {
+	
+	logger := log.With(s.logger, "method", "ValidateEmail")
+
+	code, err := s.repo.ValidateEmail(ctx, email, otp)
+	if err != nil {
+		level.Error(s.logger).Log("err", err)
+		return false, err
+	}
+
+	if code != otp {
+		return false, err
+	}
+	
+	err2 := s.repo.UpdateEmailVerified(ctx, email) 
+	if err2 != nil {
+		return false, err
+	}
+
+	logger.Log("email validated")
 	return true, nil
 }
 

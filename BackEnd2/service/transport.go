@@ -26,6 +26,12 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
 		encodeResponse,
 	))
 
+	r.Methods("GET").Path("/check-email/{email}").Handler(httptransport.NewServer(
+		endpoints.CheckEmailAvailability,
+		decodeCheckEmailReq,
+		encodeResponse,
+	))
+	
 	return r
 }
 

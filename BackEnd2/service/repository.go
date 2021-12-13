@@ -17,6 +17,7 @@ var RepoErr = errors.New("Unable to handle Repo Request")
 type Repository interface {
 	SignUp(ctx context.Context, user datastruct.User) error
 	CheckUsername(ctx context.Context, username string) (bool, error)
+	CheckEmail(ctx context.Context, email string) (bool, error)
 }
 
 type repo struct {
@@ -83,5 +84,19 @@ func (r *repo) CheckUsername(ctx context.Context, username string) (bool, error)
 	}
 
 	level.Debug(r.logger).Log("msg", "finish CheckUsername")
+	return exists, nil
+}
+
+func (r *repo) CheckEmail(ctx context.Context, email string) (bool, error){
+	var exists bool
+
+	level.Debug(r.logger).Log("msg", "start run CheckEmail")
+	sql := `SELECT EXISTS(SELECT * FROM users WHERE email = $1);`
+
+	err := r.db.QueryRow(sql, email).Scan(&exists) 
+	if err != nil {
+		return false, err
+	}
+	level.Debug(r.logger).Log("msg", "finish CheckEmail")
 	return exists, nil
 }

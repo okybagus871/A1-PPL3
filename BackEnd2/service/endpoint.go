@@ -13,12 +13,14 @@ import (
 type Endpoints struct {
 	SignUp endpoint.Endpoint
 	CheckUsernameAvailability endpoint.Endpoint
+	CheckEmailAvailability endpoint.Endpoint
 }
 
 func MakeEndpoints(s UserService) Endpoints {
 	return Endpoints {
 		SignUp: makeSignUpEndpoint(s),
 		CheckUsernameAvailability: makeCheckUsernameEndpoint(s),
+		CheckEmailAvailability: makeCheckEmailEndpoint(s),
 	}
 }
 
@@ -64,6 +66,30 @@ func decodeCheckUsernameReq(ctx context.Context, r *http.Request)(interface{}, e
 
 	req.Username = username
 	fmt.Println(username)
+	return req, nil
+}
+
+func makeCheckEmailEndpoint (s UserService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error){
+		req := request.(CheckEmailReq)
+
+		ret, err := s.CheckEmailAvailability(ctx,req.Email)
+		if err != nil {
+			return DefaultResponse{Status:false, Message: "Email error"}, err
+		} else if ret == false &&  err == nil {
+			return DefaultResponse{Status:false, Message: "User has already been taken"}, err
+		}
+		return DefaultResponse{Status:true, Message: "User available"}, err
+	}
+}
+
+func decodeCheckEmailReq(ctx context.Context, r *http.Request)(interface{}, error){
+	var req CheckEmailReq
+	params := mux.Vars(r)
+	email := params["email"]
+
+	req.Email = email
+	fmt.Println(email)
 	return req, nil
 }
 

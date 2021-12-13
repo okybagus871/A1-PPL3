@@ -16,6 +16,7 @@ type UserService interface {
 	//masukin modul
 	SignUp(ctx context.Context, user datastruct.User) (*datastruct.User, error)
 	CheckUsernameAvailability(ctx context.Context, username string) (bool, error)
+	CheckEmailAvailability(ctx context.Context, email string)(bool, error)
 }
 
 type userService struct{
@@ -62,6 +63,23 @@ func (s *userService) CheckUsernameAvailability(ctx context.Context, username st
 	}
 
 	logger.Log("username checked")
+	return true, nil
+}
+
+func (s *userService) CheckEmailAvailability(ctx context.Context, email string)(bool, error){
+	logger := log.With(s.logger, "method", "CheckEmail")
+
+	isExist, err := s.repo.CheckEmail(ctx, email)
+	if err != nil {
+		level.Error(s.logger).Log("err", err)
+		return false, err
+	}
+
+	if isExist && err == nil {
+		return false, err
+	}
+
+	logger.Log("email checked")
 	return true, nil
 }
 

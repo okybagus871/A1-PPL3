@@ -15,6 +15,10 @@ type (
 		Username string `json:"username,omitempty"`
 	}
 
+	CheckEmailReq struct {
+		Email string `json:"email,omitempty"`
+	}
+
 	// Response format
 	DefaultResponse struct {
 		Status  bool   `json:"status"`

@@ -1,7 +1,7 @@
 package service
 
 import (
-	//"database/sql"
+	"database/sql"
 	"context"
 	"errors"
 	"time"
@@ -18,6 +18,7 @@ type UserService interface {
 	CheckUsernameAvailability(ctx context.Context, username string) (bool, error)
 	CheckEmailAvailability(ctx context.Context, email string)(bool, error)
 	ValidateEmail(ctx context.Context, email string, otp uint32) (bool, error)
+	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
 }
 
 type userService struct{
@@ -105,6 +106,31 @@ func (s *userService) ValidateEmail(ctx context.Context, email string, otp uint3
 
 	logger.Log("email validated")
 	return true, nil
+}
+
+func(s *userService) GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error){
+	var user *datastruct.User
+	var err error
+
+	logger := log.With(s.logger, "method", "GetUserByEmail")
+	user, err = s.repo.GetUserByEmail(ctx, email)
+
+	if err != nil {
+		level.Error(s.logger).Log("err", err)
+		return nil, err
+	}
+
+	if err == sql.ErrNoRows {
+		level.Error(s.logger).Log("err", err)
+		return nil, err
+	}
+
+	if user.Email_verified == false {
+		return nil, err
+	}
+
+	logger.Log("email checked")
+	return user, nil
 }
 
 func GetNow() time.Time {

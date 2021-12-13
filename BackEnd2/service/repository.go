@@ -20,6 +20,7 @@ type Repository interface {
 	CheckEmail(ctx context.Context, email string) (bool, error)
 	ValidateEmail(ctx context.Context, email string, otp uint32) (uint32, error)
 	UpdateEmailVerified(ctx context.Context, email string) error
+	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
 }
 
 type repo struct {
@@ -131,4 +132,28 @@ func (r *repo) UpdateEmailVerified(ctx context.Context, email string) error {
 
 	level.Debug(r.logger).Log("msg", "finish UpdateEmailVerified")
 	return nil
+}
+
+func (r *repo) GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error) {
+	level.Debug(r.logger).Log("msg", "start run GetUserByEmail")
+
+	var user datastruct.User
+	sql := `SELECT username, password, email, name, created_date, email_verified FROM users WHERE email = $1;`
+	err := r.db.QueryRowContext(ctx, sql, email).Scan(
+		&user.Username,
+		&user.Password,
+		&user.Email,
+		&user.Name,
+		&user.Created_date,
+		&user.Email_verified,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+
+	level.Debug(r.logger).Log("msg", "finish GetUserByEmail")
+
+	return &user, nil
 }

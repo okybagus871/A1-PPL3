@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	//"BackEnd/datastruct"
+	"BackEnd/datastruct"
 )
 
 type Endpoints struct {
@@ -15,6 +15,7 @@ type Endpoints struct {
 	CheckUsernameAvailability endpoint.Endpoint
 	CheckEmailAvailability endpoint.Endpoint
 	ValidateEmail endpoint.Endpoint
+	GetUserByEmail endpoint.Endpoint
 }
 
 func MakeEndpoints(s UserService) Endpoints {
@@ -23,6 +24,7 @@ func MakeEndpoints(s UserService) Endpoints {
 		CheckUsernameAvailability: makeCheckUsernameEndpoint(s),
 		CheckEmailAvailability: makeCheckEmailEndpoint(s),
 		ValidateEmail: makeValidateEmailEndpoint(s),
+		GetUserByEmail: makeGetUserByEmail(s),
 	}
 }
 
@@ -115,6 +117,36 @@ func decodeValidateEmailReq(ctx context.Context, r *http.Request)(interface{}, e
 	if err != nil {
 		return nil, err
 	}
+	return req, nil
+}
+
+func makeGetUserByEmail (s UserService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error){
+		var user *datastruct.User
+
+		req := request.(GetUserByEmailReq)
+
+		user, err := s.GetUserByEmail(ctx, req.Email)
+		if err != nil {
+			return DefaultResponse{Status:false, Message: "User unavailable"}, err
+		}
+		return UserRes{
+			Name: user.Name,
+			Username: user.Username,
+			Password: user.Password,
+			Email: user.Email,
+			Created_date: user.Created_date,
+		}, err
+	}
+}
+
+func decodeGetUserByEmailReq(ctx context.Context, r *http.Request)(interface{}, error){
+	var req GetUserByEmailReq
+	params := mux.Vars(r)
+	email := params["email"]
+
+	req.Email = email
+	fmt.Println(email)
 	return req, nil
 }
 

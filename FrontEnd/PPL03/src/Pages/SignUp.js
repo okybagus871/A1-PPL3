@@ -5,9 +5,67 @@ import { TextInput, Buttons, Gap } from '../components/atoms';
 import { BackIcon, PhotoDummy } from '../assets/Icons';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useDispatch } from 'react-redux';
-import { showMessage, useForm } from './utils';
+import { simpanNama, useForm } from '../utils';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 
-export default function SignUp({navigation}) {
+export default function SignUp({ navigation }) {
+    const [name, setName] = useState("");
+
+    const [photo, setPhoto] = useState('');
+    // const dispatch = useDispatch();
+
+    const onSubmit = () => {
+        // dispatch({ type: 'SET_REGISTER', value: form });
+        if (name == '') {
+            showMessage({
+                message: "Field nama harus diisi",
+                type: "warning",
+            });
+        }
+        else {
+            simpanNama(name);
+            navigation.navigate('SignUpForm');
+        }
+        // simpanNama(name);
+        // navigation.navigate('SignUpForm');
+    };
+
+    // const handleGoTo = (screen) => {
+    //     navigation.navigate(screen);
+    // };
+
+    // const addPhoto = () => {
+    //     launchImageLibrary(
+    //         {
+    //             quality: 1,
+    //             maxWidth: 500,
+    //             maxHeight: 500,
+    //         },
+    //         (response) => {
+    //             console.log(response);
+    //             if (response.didCancel || response.error) {
+    //                 showMessage('Anda tidak memilih photo');
+    //             } else {
+    //                 const source = { uri: response.uri };
+    //                 // console.log(response);
+
+    //                 const dataImage = {
+    //                     uri: response.uri,
+    //                     type: response.type,
+    //                     name: response.fileName,
+    //                 };
+
+    //                 // console.log('source', source);
+    //                 // console.log('data image', dataImage);
+    //                 setPhoto(source);
+    //                 console.log(source);
+    //                 dispatch({ type: 'SET_PHOTO', value: dataImage });
+    //                 dispatch({ type: 'SET_UPLOAD_STATUS', value: true });
+    //             }
+    //         },
+    //     );
+    // };
+
     return (
         <ScrollView style={styles.wrapper}>
             <View style={styles.header}>
@@ -28,7 +86,11 @@ export default function SignUp({navigation}) {
                     <Text style={styles.labelTitle}>Profile Photo</Text>
                     <View style={styles.photoWrapper}>
                         <TouchableOpacity style={styles.photoContainer}>
-
+                            {/* {photo ? (
+                                <Image source={photo} style={styles.photoContainer} />
+                            ) : (
+                                <PhotoDummy width="50" height="50" />
+                            )} */}
                         </TouchableOpacity>
                         <View style={styles.addPhoto}>
                             <Text style={{ color: 'white' }}>+</Text>
@@ -38,15 +100,15 @@ export default function SignUp({navigation}) {
                     <TextInput
                         label="Name"
                         placeholder="Enter your full name"
-                        onChangeText={(value) => setForm('name', value)}
+                        onChangeText={(value) => setName(value)}
                     />
                     <Gap height={40} />
                     <Buttons
                         text="Next"
                         textcolor="white"
-                        backgroundcolor="#757575"
+                        backgroundcolor="#0c8eff"
                         backgroundcoloronpress="#0c8eff"
-                        onPress={() => navigation.navigate('SignUpForm')}
+                        onPress={onSubmit}
                     />
                     <Gap height={70} />
                     <View style={styles.signInWrapper}>

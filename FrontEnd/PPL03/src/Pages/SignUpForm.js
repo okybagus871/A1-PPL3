@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Image, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -16,9 +16,53 @@ import {
 } from '../assets';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUpAction } from '../redux/action';
-import { showMessage, useForm } from '../utils';
+import { getEmail, simpanKeDb, useForm } from '../utils';
+import axios from 'axios';
+import { format } from 'jest-validate';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 
 export default function SignUpForm({ navigation }) {
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    // const [form, setForm] = useForm({
+    //     email: '',
+    //     username: '',
+    //     password: '',
+    // })
+
+    // const param = JSON.stringify({
+    //     "email": value.email,
+    //     "password": value.password,
+    //     "name": value.name,
+    //     "username": value.username,
+    // });
+
+    const onSubmit = () => {
+        if (username == '') {
+            showMessage({
+                message: "Isi semua field",
+                type: "warning",
+            });
+        }
+        else if (confirmPassword != password){
+            showMessage({
+                message: "Password tidak sama",
+                type: "warning",
+            });
+        }
+        else {
+            showMessage({
+                message: "Kode verifikasi berhasil dikirim ke email anda",
+                type: "info",
+            });
+            simpanKeDb(email, username, password);
+            navigation.navigate('CheckEmailToken');
+        }
+    }
+
     return (
         <ScrollView style={styles.wrapper}>
             <View style={styles.header}>
@@ -40,7 +84,7 @@ export default function SignUpForm({ navigation }) {
                         label="Username"
                         autoCapitalize="none"
                         placeholder="Enter your username"
-                        onChangeText={(value) => setForm('username', value.toLowerCase())}
+                        onChangeText={(value) => setUsername(value)}
                     />
                     <Gap height={20} />
                     <TextInput
@@ -49,7 +93,7 @@ export default function SignUpForm({ navigation }) {
                         textContentType="emailAddress"
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        onChangeText={(value) => setForm('email', value.toLowerCase())}
+                        onChangeText={(value) => setEmail(value)}
                     />
                     <Gap height={20} />
                     <TextInputPassword
@@ -59,7 +103,7 @@ export default function SignUpForm({ navigation }) {
                         sourceImageLeftActive={LockIconActive}
                         sourceImageRight={SeePassword}
                         sourceImageRightActive={SeePasswordActive}
-                        onChangeText={(value) => setForm('password', value)}
+                        onChangeText={(value) => setPassword(value)}
                     />
                     <Gap height={20} />
                     <TextInputPassword
@@ -69,17 +113,17 @@ export default function SignUpForm({ navigation }) {
                         sourceImageLeftActive={LockIconActive}
                         sourceImageRight={SeePassword}
                         sourceImageRightActive={SeePasswordActive}
-                        onChangeText={(value) => setForm('confirm_password', value)}
+                        onChangeText={(value) => setConfirmPassword(value)}
                     />
                     <Gap height={10} />
                     <Text style={styles.confrimtext}>Both password must be match</Text>
                     <Gap height={20} />
                     <Buttons
-                        backgroundcolor="#757575"
+                        backgroundcolor="#0c8eff"
                         backgroundcoloronpress="#0c8eff"
                         textcolor="#ffff"
                         text="Create Account"
-                        onPress={() => navigation.navigate('CheckEmailToken')}
+                        onPress={onSubmit}
                     />
                     <Gap height={30} />
                     <View style={styles.signInWrapper}>

@@ -9,8 +9,6 @@ type User struct {
 		Username       string    `json:"username,omitempty"`
 		Email          string    `json:"email,omitempty"`
 		Name		   string	 `json:"name,omitempty"`
-		// Firstname      string    `json:"firstname,omitempty"`
-		// Lastname       string    `json:"lastname,omitempty"`
 		Phonenumber    string    `json:"phonenumber,omitempty"`
 		Password       string    `json:"password,omitempty"`
 		Created_date   time.Time `json:"created_date,omitempty"`
@@ -22,4 +20,6 @@ type User struct {
 		Emergency_call string    `json:"emergency_call,omitempty"`
 		Address_ktp    string    `json:"address_ktp,omitempty"`
 		Domisili       string    `json:"domisili,omitempty"`
+		Token_hash	   string
+		OTP			   uint32	 `json:"otp,omitempty"`
 }

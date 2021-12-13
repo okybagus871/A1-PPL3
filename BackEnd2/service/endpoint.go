@@ -1,12 +1,13 @@
 package service
 
 import (
-	//"fmt"
+	"fmt"
    	"context"
 	"github.com/go-kit/kit/endpoint"
 	"net/http"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	//"BackEnd/datastruct"
 )
 
 type Endpoints struct {
@@ -20,13 +21,14 @@ func MakeEndpoints(s UserService) Endpoints {
 		CheckUsernameAvailability: makeCheckUsernameEndpoint(s),
 	}
 }
+
 func makeSignUpEndpoint (s UserService) endpoint.Endpoint {
    return func(ctx context.Context, request interface{}) (interface{}, error) {
 	   req := request.(SignUpReq)
 
 	   _, err := s.SignUp(ctx, req.UserReq)
 	   if err != nil {
-		   return DefaultResponse{Status:true, Message: "Some msg error"}, err
+		   return DefaultResponse{Status:false, Message: "Some msg error"}, err
 	   }
 	   return DefaultResponse{Status:true, Message: "Success creating user"}, err
    }
@@ -45,8 +47,10 @@ func makeCheckUsernameEndpoint (s UserService) endpoint.Endpoint{
 	return func(ctx context.Context, request interface{}) (interface{}, error){
 		req := request.(CheckUsernameReq)
 
-		_, err := s.CheckUsernameAvailability(ctx,req.Username)
+		ret, err := s.CheckUsernameAvailability(ctx,req.Username)
 		if err != nil {
+			return DefaultResponse{Status:false, Message: "Username error"}, err
+		} else if ret == false &&  err == nil {
 			return DefaultResponse{Status:false, Message: "User has already been taken"}, err
 		}
 		return DefaultResponse{Status:true, Message: "User available"}, err
@@ -55,12 +59,11 @@ func makeCheckUsernameEndpoint (s UserService) endpoint.Endpoint{
 
 func decodeCheckUsernameReq(ctx context.Context, r *http.Request)(interface{}, error){
 	var req CheckUsernameReq
-	vars := mux.Vars(r)
+	params := mux.Vars(r)
+	username := params["username"]
 
-	req = CheckUsernameReq{
-		Username: vars["username"],
-	}
-
+	req.Username = username
+	fmt.Println(username)
 	return req, nil
 }
 

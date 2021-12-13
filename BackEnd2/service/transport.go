@@ -25,6 +25,7 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
 		decodeCheckUsernameReq,
 		encodeResponse,
 	))
+
 	return r
 }
 

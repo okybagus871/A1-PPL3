@@ -1,5 +1,4 @@
 {
     "go.inferGopath": false,
-    "go.toolsGopath": "C:\\Go",
-    "go.useLanguageServer": false
+    "go.toolsGopath": "C:\\Go"
 }

@@ -5,12 +5,13 @@ import (
 	//"encoding/json"
 	//"log"
 	"net/http"
+
 	"github.com/gorilla/mux"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
+func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 	r := mux.NewRouter()
 	r.Use(commonMiddleware)
 

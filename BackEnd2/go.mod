@@ -11,4 +11,7 @@ require (
 	github.com/lib/pq v1.10.3
 )
 
-require github.com/go-logfmt/logfmt v0.5.1 // indirect
+require (
+	github.com/go-logfmt/logfmt v0.5.1 // indirect
+	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
+)

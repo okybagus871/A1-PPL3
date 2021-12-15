@@ -1,11 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	"BackEnd/service"
+	"database/sql"
 
-	"github.com/go-kit/kit/log"
-	_ "github.com/lib/pq"
 	"context"
 	"flag"
 	"fmt"
@@ -14,15 +12,18 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/go-kit/kit/log"
+	_ "github.com/lib/pq"
+
 	"github.com/go-kit/kit/log/level"
 )
 
 var db *sql.DB
 var err error
 
-func main(){
-	
-	dsn := "host=localhost user=postgres password=admin dbname=user port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+func main() {
+
+	dsn := "host=localhost user=postgres password=admin dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Jakarta"
 	var httpAddr = flag.String("http", ":8080", "http listen address")
 
 	var logger log.Logger

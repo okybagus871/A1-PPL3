@@ -6,7 +6,6 @@ import (
 	"github.com/go-kit/kit/endpoint"
 	"net/http"
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"BackEnd/datastruct"
 )
 
@@ -53,7 +52,7 @@ func makeCheckUsernameEndpoint (s UserService) endpoint.Endpoint{
 	return func(ctx context.Context, request interface{}) (interface{}, error){
 		req := request.(CheckUsernameReq)
 
-		ret, err := s.CheckUsernameAvailability(ctx,req.Username)
+		ret, err := s.CheckUsernameAvailability(ctx, req.Username)
 		if err != nil {
 			return DefaultResponse{Status:false, Message: "Username error"}, err
 		} else if ret == false &&  err == nil {
@@ -65,8 +64,9 @@ func makeCheckUsernameEndpoint (s UserService) endpoint.Endpoint{
 
 func decodeCheckUsernameReq(ctx context.Context, r *http.Request)(interface{}, error){
 	var req CheckUsernameReq
-	params := mux.Vars(r)
-	username := params["username"]
+	// params := mux.Vars(r)
+	// username := params["username"]
+	username := r.URL.Query().Get("username")
 
 	req.Username = username
 	fmt.Println(username)
@@ -89,9 +89,10 @@ func makeCheckEmailEndpoint (s UserService) endpoint.Endpoint {
 
 func decodeCheckEmailReq(ctx context.Context, r *http.Request)(interface{}, error){
 	var req CheckEmailReq
-	params := mux.Vars(r)
-	email := params["email"]
+	// params := mux.Vars(r)
+	// email := params["email"]
 
+	email := r.URL.Query().Get("email")
 	req.Email = email
 	fmt.Println(email)
 	return req, nil
@@ -142,9 +143,10 @@ func makeGetUserByEmail (s UserService) endpoint.Endpoint {
 
 func decodeGetUserByEmailReq(ctx context.Context, r *http.Request)(interface{}, error){
 	var req GetUserByEmailReq
-	params := mux.Vars(r)
-	email := params["email"]
+	// params := mux.Vars(r)
+	// email := params["email"]
 
+	email := r.URL.Query().Get("email")
 	req.Email = email
 	fmt.Println(email)
 	return req, nil

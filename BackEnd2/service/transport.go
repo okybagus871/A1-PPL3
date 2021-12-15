@@ -20,13 +20,13 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
 		encodeResponse,
 	))
 	
-	r.Methods("GET").Path("/check-username/{username}").Handler(httptransport.NewServer(
+	r.Methods("GET").Path("/check-username").Handler(httptransport.NewServer(
 		endpoints.CheckUsernameAvailability,
 		decodeCheckUsernameReq,
 		encodeResponse,
 	))
 
-	r.Methods("GET").Path("/check-email/{email}").Handler(httptransport.NewServer(
+	r.Methods("GET").Path("/check-email").Handler(httptransport.NewServer(
 		endpoints.CheckEmailAvailability,
 		decodeCheckEmailReq,
 		encodeResponse,
@@ -39,7 +39,7 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler{
 		encodeResponse,
 	))
 
-	r.Methods("GET").Path("/get-user/{email}").Handler(httptransport.NewServer(
+	r.Methods("GET").Path("/get-user").Handler(httptransport.NewServer(
 		endpoints.GetUserByEmail,
 		decodeGetUserByEmailReq,
 		encodeResponse,

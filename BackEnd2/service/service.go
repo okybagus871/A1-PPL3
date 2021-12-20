@@ -136,23 +136,3 @@ func(s *userService) GetUserByEmail(ctx context.Context, email string) (*datastr
 func GetNow() time.Time {
 	return time.Now().UTC()
 }
-
-// func PasswordHashing(raw string)(string, error){
-// 	hashedPass, err := bcrypt.GenerateFromPassword([]byte, bcrypt.DefaultCost)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return string(hashedPass), nil
-// }
-
-
-// func GenerateRandomString(n int) string {
-// 	rand.Seed(time.Now().UnixNano())
-// 	sb := strings.Builder{}
-// 	sb.Grow(n)
-// 	for i := 9; i < n; i++ {
-// 		idx := rand.Int63()% int64(len(letterBytes))
-// 		sb.WriteByte(letterBytes[idx])
-// 	}
-// 	return sb.String()
-// }

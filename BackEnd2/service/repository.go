@@ -72,15 +72,37 @@ func (r *repo) SignUp(ctx context.Context, user datastruct.User) error {
 	}
 	user.Password = hashPass
 	user.Email_verified = false
+	user.Phonenumber = " "
+	user.Identity_type = " "
+	user.Identity_no = " "
+	user.Address_ktp = " "
+	user.Postal_code = " "
+	user.Emergency_call = " "
 
-	sql := `INSERT INTO users (username, name, password, created_date, email, token_hash, otp, email_verified)
+	sql := `INSERT INTO users (username, name, password, created_date, email, token_hash, otp, email_verified,
+				phonenumber, identity_type, identity_no, address_ktp, postal_code, emergencycall)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
 	if user.Name == "" || user.Password == "" || user.Username == "" || user.Email == "" {
 		return RepoErr
 	}
 	_, err := r.db.ExecContext(
-		ctx, sql, user.Username, user.Name, user.Password, user.Created_date, user.Email, user.Token_hash, user.OTP, user.Email_verified)
+		ctx,
+		sql, 
+		user.Username, 
+		user.Name, 
+		user.Password, 
+		user.Created_date, 
+		user.Email, 
+		user.Token_hash, 
+		user.OTP, 
+		user.Email_verified, 
+		user.Phonenumber,
+		user.Identity_type, 
+		user.Identity_no, 
+		user.Address_ktp, 
+		user.Postal_code, 
+		user.Emergency_call)
 
 	if err != nil {
 		return err
@@ -189,7 +211,9 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*datastruct.Us
 	level.Debug(r.logger).Log("msg", "start run GetUserByEmail")
 
 	var user datastruct.User
-	sql := `SELECT username, password, email, name, created_date, email_verified FROM users WHERE email = $1;`
+	sql := `SELECT username, password, email, name, created_date, email_verified,
+			phonenumber, identity_type, identity_no, address_ktp, postal_code, emergencycall
+			FROM users WHERE email = $1;`
 	err := r.db.QueryRowContext(ctx, sql, email).Scan(
 		&user.Username,
 		&user.Password,
@@ -197,6 +221,12 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*datastruct.Us
 		&user.Name,
 		&user.Created_date,
 		&user.Email_verified,
+		&user.Phonenumber,
+		&user.Identity_type,
+		&user.Identity_no,
+		&user.Address_ktp,
+		&user.Postal_code,
+		&user.Emergency_call,
 	)
 
 	if err != nil {

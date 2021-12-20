@@ -21,5 +21,6 @@ type User struct {
 	Identity_no    string    `json:"identity_no,omitempty"`
 	Emergency_call string    `json:"emergency_call,omitempty"`
 	Address_ktp    string    `json:"address_ktp,omitempty"`
+	Postal_code    string    `json:"postal_code,omitempty"`
 	Domisili       string    `json:"domisili,omitempty"`
 }

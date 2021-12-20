@@ -137,6 +137,12 @@ func makeGetUserByEmail (s UserService) endpoint.Endpoint {
 			Password: user.Password,
 			Email: user.Email,
 			Created_date: user.Created_date,
+			Phonenumber: user.Phonenumber,
+			Identity_type: user.Identity_type,
+			Identity_no: user.Identity_no,
+			Emergency_call: user.Emergency_call,
+			Address_ktp: user.Address_ktp,
+			Postal_code: user.Postal_code,
 		}, err
 	}
 }

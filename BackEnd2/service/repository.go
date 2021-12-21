@@ -37,6 +37,7 @@ type Repository interface {
 	UpdateEmailVerified(ctx context.Context, email string) error
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
 	GetUserPassword(ctx context.Context, email string)(string, error)
+	UpdatePassword(ctx context.Context, email string, password string) error
 }
 
 type repo struct {
@@ -244,7 +245,7 @@ func (r *repo) GetUserPassword(ctx context.Context, email string)(string, error)
 
 	var password string
 
-	sql := `SELECT password FROM users WHERE email = $1`
+	sql := `SELECT password FROM users WHERE email = $1;`
 	err := r.db.QueryRow(sql, email).Scan(&password)
 
 	if err != nil {
@@ -254,4 +255,18 @@ func (r *repo) GetUserPassword(ctx context.Context, email string)(string, error)
 	level.Debug(r.logger).Log("msg", "finish GetUserPassword")
 
 	return password, nil
+}
+
+func (r *repo) UpdatePassword(ctx context.Context, email string, password string) error{
+	level.Debug(r.logger).Log("msg", "start run UpdatePassword")
+
+	sql := `UPDATE users SET password = $1 WHERE email = $2;`
+	_, err := r.db.ExecContext(ctx, sql, password, email)
+
+	if err != nil {
+		return err
+	}
+
+	level.Debug(r.logger).Log("msg", "finish UpdatePassword")
+	return nil
 }

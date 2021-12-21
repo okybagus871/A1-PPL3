@@ -20,6 +20,7 @@ type UserService interface {
 	ValidateEmail(ctx context.Context, email string, otp uint32) (bool, error)
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
 	GetUserPassword(ctx context.Context, email string)(string, error)
+	UpdatePassword(ctx context.Context, email string, password string) error
 }
 
 type userService struct{
@@ -150,6 +151,19 @@ func(s *userService) GetUserPassword(ctx context.Context, email string)(string, 
 
 	logger.Log("GetUserPassword done")
 	return password, nil
+}
+
+func(s *userService) UpdatePassword(ctx context.Context, email string, password string) error {
+	logger := log.With(s.logger, "method", "UpdatePassword")
+
+	err := s.repo.UpdatePassword(ctx, email, password)
+	if err != nil {
+		level.Error(s.logger).Log("err", err)
+		return err
+	}
+
+	logger.Log("UpdatePassword done")
+	return nil
 }
 
 func GetNow() time.Time {

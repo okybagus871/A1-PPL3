@@ -16,6 +16,7 @@ type Endpoints struct {
 	ValidateEmail endpoint.Endpoint
 	GetUserByEmail endpoint.Endpoint
 	GetUserPassword endpoint.Endpoint
+	UpdatePassword endpoint.Endpoint
 }
 
 func MakeEndpoints(s UserService) Endpoints {
@@ -26,6 +27,7 @@ func MakeEndpoints(s UserService) Endpoints {
 		ValidateEmail: makeValidateEmailEndpoint(s),
 		GetUserByEmail: makeGetUserByEmail(s),
 		GetUserPassword: makeGetUserPassword(s),
+		UpdatePassword: makeUpdatePassword(s),
 	}
 }
 
@@ -180,6 +182,27 @@ func decodeGetUserPasswordReq(ctx context.Context, r *http.Request)(interface{},
 	email := r.URL.Query().Get("email")
 	req.Email = email
 	fmt.Println(email)
+	return req, nil
+}
+
+func makeUpdatePassword (s UserService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error){
+		req := request.(UpdatePasswordReq)
+
+		err := s.UpdatePassword(ctx, req.Email, req.Password)
+		if err != nil {
+			return DefaultResponse{Status:false, Message: "Update password error"}, err
+		}
+		return DefaultResponse{Status:true, Message: "Password has been updated"}, err
+	}
+}
+
+func decodeUpdatePasswordReq(ctx context.Context, r *http.Request)(interface{}, error){
+	var req UpdatePasswordReq
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
 	return req, nil
 }
 

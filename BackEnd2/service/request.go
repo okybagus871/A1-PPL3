@@ -28,6 +28,11 @@ type (
 		Email	string `json:"email"`
 	}
 
+	UpdatePasswordReq struct {
+		Email	string `json:"email"`
+		Password string `json:"password"`
+	}
+
 	// Response format
 	DefaultResponse struct {
 		Status  bool   `json:"status"`

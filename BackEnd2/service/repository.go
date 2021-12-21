@@ -36,6 +36,7 @@ type Repository interface {
 	ValidateEmail(ctx context.Context, email string, otp uint32) (uint32, error)
 	UpdateEmailVerified(ctx context.Context, email string) error
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
+	GetUserPassword(ctx context.Context, email string)(string, error)
 }
 
 type repo struct {
@@ -81,7 +82,7 @@ func (r *repo) SignUp(ctx context.Context, user datastruct.User) error {
 
 	sql := `INSERT INTO users (username, name, password, created_date, email, token_hash, otp, email_verified,
 				phonenumber, identity_type, identity_no, address_ktp, postal_code, emergencycall)
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`
 
 	if user.Name == "" || user.Password == "" || user.Username == "" || user.Email == "" {
 		return RepoErr
@@ -236,4 +237,21 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*datastruct.Us
 	level.Debug(r.logger).Log("msg", "finish GetUserByEmail")
 
 	return &user, nil
+}
+
+func (r *repo) GetUserPassword(ctx context.Context, email string)(string, error){
+	level.Debug(r.logger).Log("msg", "start run GetUserPassword")
+
+	var password string
+
+	sql := `SELECT password FROM users WHERE email = $1`
+	err := r.db.QueryRow(sql, email).Scan(&password)
+
+	if err != nil {
+		return " ", err
+	}
+
+	level.Debug(r.logger).Log("msg", "finish GetUserPassword")
+
+	return password, nil
 }

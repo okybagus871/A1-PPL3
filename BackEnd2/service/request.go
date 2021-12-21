@@ -35,16 +35,20 @@ type (
 	}
 
 	UserRes struct {
-		Username		string		`json:"username,omitempty"`
+		Username		string		`json:"username"`
+		Password		string		`json:"password"`
+		Email			string		`json:"email"`
+		Name			string		`json:"name"`
+		Created_date	time.Time	`json:"created_date"`
+		Phonenumber     string    	`json:"phonenumber"`
+		Identity_type  	string    	`json:"identity_type"`
+		Identity_no    	string    	`json:"identity_no"`
+		Emergency_call 	string    	`json:"emergency_call"`
+		Address_ktp    	string    	`json:"address_ktp"`
+		Postal_code     string      `json:"postal_code"`
+	}
+
+	UserPassRes struct {
 		Password		string		`json:"password,omitempty"`
-		Email			string		`json:"email,omitempty"`
-		Name			string		`json:"name,omitempty"`
-		Created_date	time.Time	`json:"created_date,omitempty"`
-		Phonenumber     string    	`json:"phonenumber,omitempty"`
-		Identity_type  	string    	`json:"identity_type,omitempty"`
-		Identity_no    	string    	`json:"identity_no,omitempty"`
-		Emergency_call 	string    	`json:"emergency_call,omitempty"`
-		Address_ktp    	string    	`json:"address_ktp,omitempty"`
-		Postal_code     string      `json:"postal_code,omitempty"`
 	}
 )

@@ -15,6 +15,7 @@ type Endpoints struct {
 	CheckEmailAvailability endpoint.Endpoint
 	ValidateEmail endpoint.Endpoint
 	GetUserByEmail endpoint.Endpoint
+	GetUserPassword endpoint.Endpoint
 }
 
 func MakeEndpoints(s UserService) Endpoints {
@@ -24,6 +25,7 @@ func MakeEndpoints(s UserService) Endpoints {
 		CheckEmailAvailability: makeCheckEmailEndpoint(s),
 		ValidateEmail: makeValidateEmailEndpoint(s),
 		GetUserByEmail: makeGetUserByEmail(s),
+		GetUserPassword: makeGetUserPassword(s),
 	}
 }
 
@@ -151,6 +153,29 @@ func decodeGetUserByEmailReq(ctx context.Context, r *http.Request)(interface{}, 
 	var req GetUserByEmailReq
 	// params := mux.Vars(r)
 	// email := params["email"]
+
+	email := r.URL.Query().Get("email")
+	req.Email = email
+	fmt.Println(email)
+	return req, nil
+}
+
+func makeGetUserPassword (s UserService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error){
+		req := request.(GetUserByEmailReq)
+
+		pword, err := s.GetUserPassword(ctx, req.Email)
+		if err != nil {
+			return DefaultResponse{Status:false, Message: "User unavailable"}, err
+		}
+		return UserPassRes{
+			Password: pword,
+		}, err
+	}
+}
+
+func decodeGetUserPasswordReq(ctx context.Context, r *http.Request)(interface{}, error){
+	var req GetUserByEmailReq
 
 	email := r.URL.Query().Get("email")
 	req.Email = email

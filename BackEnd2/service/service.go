@@ -44,7 +44,7 @@ func (s *userService) SignUp(ctx context.Context, user datastruct.User) (*datast
 
 	// uuid, _ := uuid.NewUUID()
 	// user.UserID = uuid
-	user.Created_date = GetNow()
+	user.Created_date = GetNow().Format("02-Jan-2006")
 
 	if err := s.repo.SignUp(ctx, user); err != nil {
 		level.Error(s.logger).Log("err", err)

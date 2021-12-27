@@ -13,7 +13,7 @@ type User struct {
 	OTP            int       `json:"otp,omitempty"`
 	Phonenumber    string    `json:"phonenumber,omitempty"`
 	Password       string    `json:"password,omitempty"`
-	Created_date   time.Time `json:"created_date,omitempty"`
+	Created_date   string	 `json:"created_date,omitempty"`
 	Updated_date   time.Time `json:"updated_date,omitempty"`
 	Email_verified bool      `json:"email_verified,omitempty"`
 	Image_file     string    `json:"image_file,omitempty"`

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"time"
+	//"time"
 	"BackEnd/datastruct"
 )
 
@@ -44,7 +44,7 @@ type (
 		Password		string		`json:"password"`
 		Email			string		`json:"email"`
 		Name			string		`json:"name"`
-		Created_date	time.Time	`json:"created_date"`
+		Created_date	string		`json:"created_date"`
 		Phonenumber     string    	`json:"phonenumber"`
 		Identity_type  	string    	`json:"identity_type"`
 		Identity_no    	string    	`json:"identity_no"`

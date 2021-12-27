@@ -215,7 +215,7 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*datastruct.Us
 
 	var user datastruct.User
 	sql := `SELECT username, password, email, name, created_date, email_verified,
-			phonenumber, identity_type, identity_no, address_ktp, postal_code, emergencycall
+			phonenumber, identity_type, identity_no, address_ktp, postal_code, emergency_call
 			FROM users WHERE email = $1;`
 	err := r.db.QueryRowContext(ctx, sql, email).Scan(
 		&user.Username,

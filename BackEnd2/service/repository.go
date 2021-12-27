@@ -75,12 +75,12 @@ func (r *repo) SignUp(ctx context.Context, user datastruct.User) error {
 	}
 	user.Password = hashPass
 	user.Email_verified = false
-	user.Phonenumber = " "
-	user.Identity_type = " "
-	user.Identity_no = " "
-	user.Address_ktp = " "
-	user.Postal_code = " "
-	user.Emergency_call = " "
+	user.Phonenumber = ""
+	user.Identity_type = ""
+	user.Identity_no = ""
+	user.Address_ktp = ""
+	user.Postal_code = ""
+	user.Emergency_call = ""
 
 	sql := `INSERT INTO users (username, name, password, created_date, email, token_hash, otp, email_verified,
 				phonenumber, identity_type, identity_no, address_ktp, postal_code, emergency_call)

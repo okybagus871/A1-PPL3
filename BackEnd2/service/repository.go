@@ -36,7 +36,7 @@ type Repository interface {
 	ValidateEmail(ctx context.Context, email string, otp uint32) (uint32, error)
 	UpdateEmailVerified(ctx context.Context, email string) error
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
-	GetUserPassword(ctx context.Context, email string)(string, error)
+	GetUserPassword(ctx context.Context, email string) (string, error)
 	UpdatePassword(ctx context.Context, email string, password string) error
 	UpdateUserProfile(ctx context.Context, user datastruct.User) error
 }
@@ -91,20 +91,20 @@ func (r *repo) SignUp(ctx context.Context, user datastruct.User) error {
 	}
 	_, err := r.db.ExecContext(
 		ctx,
-		sql, 
-		user.Username, 
-		user.Name, 
-		user.Password, 
-		user.Created_date, 
-		user.Email, 
-		user.Token_hash, 
-		user.OTP, 
-		user.Email_verified, 
+		sql,
+		user.Username,
+		user.Name,
+		user.Password,
+		user.Created_date,
+		user.Email,
+		user.Token_hash,
+		user.OTP,
+		user.Email_verified,
 		user.Phonenumber,
-		user.Identity_type, 
-		user.Identity_no, 
-		user.Address_ktp, 
-		user.Postal_code, 
+		user.Identity_type,
+		user.Identity_no,
+		user.Address_ktp,
+		user.Postal_code,
 		user.Emergency_call)
 
 	if err != nil {
@@ -241,7 +241,7 @@ func (r *repo) GetUserByEmail(ctx context.Context, email string) (*datastruct.Us
 	return &user, nil
 }
 
-func (r *repo) GetUserPassword(ctx context.Context, email string)(string, error){
+func (r *repo) GetUserPassword(ctx context.Context, email string) (string, error) {
 	level.Debug(r.logger).Log("msg", "start run GetUserPassword")
 
 	var password string
@@ -258,7 +258,7 @@ func (r *repo) GetUserPassword(ctx context.Context, email string)(string, error)
 	return password, nil
 }
 
-func (r *repo) UpdatePassword(ctx context.Context, email string, password string) error{
+func (r *repo) UpdatePassword(ctx context.Context, email string, password string) error {
 	level.Debug(r.logger).Log("msg", "start run UpdatePassword")
 
 	sql := `UPDATE users SET password = $1 WHERE email = $2;`

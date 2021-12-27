@@ -38,6 +38,7 @@ type Repository interface {
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
 	GetUserPassword(ctx context.Context, email string)(string, error)
 	UpdatePassword(ctx context.Context, email string, password string) error
+	UpdateUserProfile(ctx context.Context, user datastruct.User) error
 }
 
 type repo struct {
@@ -82,7 +83,7 @@ func (r *repo) SignUp(ctx context.Context, user datastruct.User) error {
 	user.Emergency_call = " "
 
 	sql := `INSERT INTO users (username, name, password, created_date, email, token_hash, otp, email_verified,
-				phonenumber, identity_type, identity_no, address_ktp, postal_code, emergencycall)
+				phonenumber, identity_type, identity_no, address_ktp, postal_code, emergency_call)
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`
 
 	if user.Name == "" || user.Password == "" || user.Username == "" || user.Email == "" {
@@ -268,5 +269,35 @@ func (r *repo) UpdatePassword(ctx context.Context, email string, password string
 	}
 
 	level.Debug(r.logger).Log("msg", "finish UpdatePassword")
+	return nil
+}
+
+func (r *repo) UpdateUserProfile(ctx context.Context, user datastruct.User) error {
+	level.Debug(r.logger).Log("msg", "start run UpdateUserProfile")
+
+	sql := `UPDATE users
+			SET phonenumber = $1,
+			address_ktp = $2,
+			postal_code = $3,
+			identity_type = $4,
+			identity_no = $5,
+			emergency_call = $6
+			WHERE email = $7`
+	_, err := r.db.ExecContext(
+		ctx, 
+		sql,
+		user.Phonenumber,
+		user.Address_ktp,
+		user.Postal_code,
+		user.Identity_type,
+		user.Identity_no,
+		user.Emergency_call,
+		user.Email)
+
+	if err != nil {
+		return err
+	}
+
+	level.Debug(r.logger).Log("msg", "finish UpdateUserProfile")
 	return nil
 }

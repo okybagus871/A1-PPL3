@@ -17,6 +17,7 @@ type Endpoints struct {
 	GetUserByEmail endpoint.Endpoint
 	GetUserPassword endpoint.Endpoint
 	UpdatePassword endpoint.Endpoint
+	UpdateUserProfile endpoint.Endpoint
 }
 
 func MakeEndpoints(s UserService) Endpoints {
@@ -28,12 +29,13 @@ func MakeEndpoints(s UserService) Endpoints {
 		GetUserByEmail: makeGetUserByEmail(s),
 		GetUserPassword: makeGetUserPassword(s),
 		UpdatePassword: makeUpdatePassword(s),
+		UpdateUserProfile: makeUpdateUserProfile(s),
 	}
 }
 
 func makeSignUpEndpoint (s UserService) endpoint.Endpoint {
    return func(ctx context.Context, request interface{}) (interface{}, error) {
-	   req := request.(SignUpReq)
+	   req := request.(UserProfileReq)
 
 	   _, err := s.SignUp(ctx, req.UserReq)
 	   if err != nil {
@@ -44,7 +46,7 @@ func makeSignUpEndpoint (s UserService) endpoint.Endpoint {
 }
 
 func decodeSignUpReq(ctx context.Context, r *http.Request)(interface{}, error){
-	var req SignUpReq
+	var req UserProfileReq
 	err := json.NewDecoder(r.Body).Decode(&req.UserReq)
 	if err != nil {
 		return nil, err
@@ -200,6 +202,27 @@ func makeUpdatePassword (s UserService) endpoint.Endpoint {
 func decodeUpdatePasswordReq(ctx context.Context, r *http.Request)(interface{}, error){
 	var req UpdatePasswordReq
 	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func makeUpdateUserProfile (s UserService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error){
+		req := request.(UserProfileReq)
+
+		_, err := s.UpdateUserProfile(ctx, req.UserReq)
+	   if err != nil {
+		   return DefaultResponse{Status:false, Message: "Update user profile failed"}, err
+	   }
+	   return DefaultResponse{Status:true, Message: "Success updating user profile"}, err
+	}
+}
+
+func decodeUpdateUserProfileReq(ctx context.Context, r *http.Request)(interface{}, error){
+	var req UserProfileReq
+	err := json.NewDecoder(r.Body).Decode(&req.UserReq)
 	if err != nil {
 		return nil, err
 	}

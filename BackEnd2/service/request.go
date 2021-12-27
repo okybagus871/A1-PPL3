@@ -7,7 +7,7 @@ import (
 
 type (
 	// Request format
-	SignUpReq struct {
+	UserProfileReq struct {
 		UserReq datastruct.User
 	}
 

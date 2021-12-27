@@ -21,6 +21,7 @@ type UserService interface {
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
 	GetUserPassword(ctx context.Context, email string)(string, error)
 	UpdatePassword(ctx context.Context, email string, password string) error
+	UpdateUserProfile(ctx context.Context, user datastruct.User) (*datastruct.User, error)
 }
 
 type userService struct{
@@ -164,6 +165,20 @@ func(s *userService) UpdatePassword(ctx context.Context, email string, password 
 
 	logger.Log("UpdatePassword done")
 	return nil
+}
+
+func(s *userService) UpdateUserProfile(ctx context.Context, user datastruct.User) (*datastruct.User, error) {
+	logger := log.With(s.logger, "method", "UpdateUserProfile")
+
+	err := s.repo.UpdateUserProfile(ctx, user)
+
+	if err != nil {
+		level.Error(s.logger).Log("err", err)
+		return nil, err
+	}
+
+	logger.Log("UpdateUserProfile done")
+	return &user, nil
 }
 
 func GetNow() time.Time {

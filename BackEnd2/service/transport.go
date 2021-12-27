@@ -57,6 +57,13 @@ func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 		decodeUpdatePasswordReq,
 		encodeResponse,
 	))
+
+	r.Methods("POST").Path("/update-profile").Handler(httptransport.NewServer(
+		endpoints.UpdateUserProfile,
+		decodeUpdateUserProfileReq,
+		encodeResponse,
+	))
+
 	return r
 }
 

@@ -170,6 +170,7 @@ func(s *userService) UpdatePassword(ctx context.Context, email string, password 
 func(s *userService) UpdateUserProfile(ctx context.Context, user datastruct.User) (*datastruct.User, error) {
 	logger := log.With(s.logger, "method", "UpdateUserProfile")
 
+	user.Updated_date = GetNow().Format("02-Jan-2006")
 	err := s.repo.UpdateUserProfile(ctx, user)
 
 	if err != nil {

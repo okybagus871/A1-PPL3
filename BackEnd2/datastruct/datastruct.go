@@ -1,9 +1,5 @@
 package datastruct
 
-import (
-	"time"
-)
-
 type User struct {
 	UserID         uint32    `json:"user_id,omitempty"`
 	Username       string    `json:"username,omitempty"`
@@ -14,7 +10,7 @@ type User struct {
 	Phonenumber    string    `json:"phonenumber,omitempty"`
 	Password       string    `json:"password,omitempty"`
 	Created_date   string	 `json:"created_date,omitempty"`
-	Updated_date   time.Time `json:"updated_date,omitempty"`
+	Updated_date   string	 `json:"updated_date,omitempty"`
 	Email_verified bool      `json:"email_verified,omitempty"`
 	Image_file     string    `json:"image_file,omitempty"`
 	Identity_type  string    `json:"identity_type,omitempty"`

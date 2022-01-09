@@ -23,9 +23,9 @@ import (
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 const CONFIG_SMTP_HOST = "smtp.gmail.com"
 const CONFIG_SMTP_PORT = 587
-const CONFIG_SENDER_NAME = "SadhelEX <sadhelex@gmail.com>"
-const CONFIG_AUTH_EMAIL = "oky.bagus.tif20@polban.ac.id"
-const CONFIG_AUTH_PASSWORD = "sayacakep87"
+const CONFIG_SENDER_NAME = "SadhelX <sadhelx@gmail.com>"
+const CONFIG_AUTH_EMAIL = "sadhelx@gmail.com"
+const CONFIG_AUTH_PASSWORD = "ppltingkat2"
 
 var RepoErr = errors.New("Unable to handle Repo Request")
 
@@ -284,7 +284,7 @@ func (r *repo) UpdateUserProfile(ctx context.Context, user datastruct.User) erro
 			emergency_call = $6
 			WHERE email = $7`
 	_, err := r.db.ExecContext(
-		ctx, 
+		ctx,
 		sql,
 		user.Phonenumber,
 		user.Address_ktp,

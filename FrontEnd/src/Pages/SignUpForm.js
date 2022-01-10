@@ -27,102 +27,197 @@ export default function SignUpForm({ navigation }) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const checkUsername = async (username) => {
-        try {
+    // const checkUsername = async (username) => {
+    //     try {
+    //         const res = await axios.get('http://10.0.2.2:8080/check-username', {
+    //             params: {
+    //                 username
+    //             }
+    //         });
+    //         if (res.data.status == true) {
+    //             setUsername(username);
+    //         } else {
+    //             showMessage({
+    //                 message: "Username " + username + " has already taken",
+    //                 type: "warning",
+    //             });
+    //         }
+    //     } catch (error) {
+    //         alert(error.message);
+    //     }
+    // }
+
+    // const checkEmail = async (email) => {
+    //     try {
+    //         const res = await axios.get('http://10.0.2.2:8080/check-email', {
+    //             params: {
+    //                 email
+    //             }
+    //         });
+    //         if (res.data.status == true) {
+    //             setEmail(email);
+    //         } else {
+    //             showMessage({
+    //                 message: "Email " + email + " has already taken",
+    //                 type: "warning",
+    //             });
+    //         }
+    //     } catch (error) {
+    //         alert(error.message);
+    //     }
+    // }
+
+    const onSubmit = async () => {
+        // const res = await axios.get('http://10.0.2.2:8080/check-username', {
+        //     params: {
+        //         username
+        //     }
+        // });
+        // if (res.data.status == true) {
+        //     const res = await axios.get('http://10.0.2.2:8080/check-email', {
+        //         params: {
+        //             email
+        //         }
+        //     });
+        //     if (res.data.status == true) {
+        //         if (confirmPassword != password) {
+        //             showMessage({
+        //                 message: "Password not match",
+        //                 type: "warning",
+        //             });
+        //         }
+        //         else if (username == null) {
+        //             showMessage({
+        //                 message: "Username must be filled",
+        //                 type: "warning",
+        //             });
+        //         }
+        //         else if (email == null) {
+        //             showMessage({
+        //                 message: "Email must be filled",
+        //                 type: "warning",
+        //             });
+        //         }
+        //         else if (password == null) {
+        //             showMessage({
+        //                 message: "Password must be filled",
+        //                 type: "warning",
+        //             });
+        //         }
+        //         else if (confirmPassword == null) {
+        //             showMessage({
+        //                 message: "Confirm password must be filled",
+        //                 type: "warning",
+        //             });
+        //         }
+        //         else {
+        //             simpanEmail(email);
+        //             const name = getNama();
+        //             const data = {
+        //                 name,
+        //                 email,
+        //                 username,
+        //                 password,
+        //             };
+        //             axios.post("http://10.0.2.2:8080/signup", data);
+        //             navigation.navigate('CheckEmailToken');
+        //         }
+        //     } else {
+        //         setEmail(null);
+        //         showMessage({
+        //             message: "Email " + email + " has already taken",
+        //             type: "warning",
+        //         });
+        //     }
+        // } else {
+        //     setUsername(null);
+        //     showMessage({
+        //         message: "Username " + username + " has already taken",
+        //         type: "warning",
+        //     });
+        // }
+
+        const respon = await axios.get('https://api.kickbox.com/v2/verify', {
+            params: {
+                email,
+                apikey: 'live_be3b8dcceea5a956bc10a26e6068f9001925aef9b5f3cab17c195e2eefe362a4'
+            }
+        });
+        if (respon.data.result == 'undeliverable') {
+            showMessage({
+                message: "Invalid email",
+                type: "warning",
+            });
+        }
+        else {
             const res = await axios.get('http://10.0.2.2:8080/check-username', {
                 params: {
                     username
                 }
             });
             if (res.data.status == true) {
-                setUsername(username);
+                const res = await axios.get('http://10.0.2.2:8080/check-email', {
+                    params: {
+                        email
+                    }
+                });
+                if (res.data.status == true) {
+                    if (confirmPassword != password) {
+                        showMessage({
+                            message: "Password not match",
+                            type: "warning",
+                        });
+                    }
+                    else if (username == null) {
+                        showMessage({
+                            message: "Username must be filled",
+                            type: "warning",
+                        });
+                    }
+                    else if (email == null) {
+                        showMessage({
+                            message: "Email must be filled",
+                            type: "warning",
+                        });
+                    }
+                    else if (password == null) {
+                        showMessage({
+                            message: "Password must be filled",
+                            type: "warning",
+                        });
+                    }
+                    else if (confirmPassword == null) {
+                        showMessage({
+                            message: "Confirm password must be filled",
+                            type: "warning",
+                        });
+                    }
+                    else {
+                        simpanEmail(email);
+                        const name = getNama();
+                        const data = {
+                            name,
+                            email,
+                            username,
+                            password,
+                        };
+                        axios.post("http://10.0.2.2:8080/signup", data);
+                        navigation.navigate('CheckEmailToken');
+                    }
+                } else {
+                    setEmail(null);
+                    showMessage({
+                        message: "Email " + email + " has already taken",
+                        type: "warning",
+                    });
+                }
             } else {
+                setUsername(null);
                 showMessage({
                     message: "Username " + username + " has already taken",
                     type: "warning",
                 });
             }
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    const checkEmail = async (email) => {
-        try {
-            const res = await axios.get('http://10.0.2.2:8080/check-email', {
-                params: {
-                    email
-                }
-            });
-            if (res.data.status == true) {
-                setEmail(email);
-            } else {
-                showMessage({
-                    message: "Email " + email + " has already taken",
-                    type: "warning",
-                });
-            }
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    const onSubmit = async () => {
-        // try {
-        //     const respon = await axios.get('https://api.kickbox.com/v2/verify', {
-        //         params: {
-        //             email,
-        //             apikey: 'live_be3b8dcceea5a956bc10a26e6068f9001925aef9b5f3cab17c195e2eefe362a4'
-        //         }
-        //     });
-        //     if (respon.data.result == 'undeliverable'){
-        //         showMessage({
-        //             message: "Invalid email",
-        //             type: "warning",
-        //         });
-        //     }
-        //     else if (confirmPassword != password) {
-        //         showMessage({
-        //             message: "Password not match",
-        //             type: "warning",
-        //         });
-        //     }
-        //     else {
-        //         showMessage({
-        //             message: "Check your email to verification account",
-        //             type: "info",
-        //         });
-        //         simpanEmail(email);
-        //         const name = getNama();
-        //         const data = {
-        //             name,
-        //             email,
-        //             username,
-        //             password,
-        //         };
-        //         axios.post("http://10.0.2.2:8080/signup", data);
-        //         navigation.navigate('CheckEmailToken');
-        //     }
-        // } catch (error) {
-        //     alert(error.message);
-        // }
-        if (confirmPassword != password) {
-            showMessage({
-                message: "Password not match",
-                type: "warning",
-            });
-        }
-        else {
-            simpanEmail(email);
-            const name = getNama();
-            const data = {
-                name,
-                email,
-                username,
-                password,
-            };
-            axios.post("http://10.0.2.2:8080/signup", data);
-            navigation.navigate('CheckEmailToken');
         }
     }
 
@@ -147,7 +242,7 @@ export default function SignUpForm({ navigation }) {
                         label="Username"
                         autoCapitalize="none"
                         placeholder="Enter your username"
-                        onChangeText={(value) => checkUsername(value)}
+                        onChangeText={(value) => setUsername(value)}
                     />
                     <Gap height={20} />
                     <TextInput
@@ -156,7 +251,7 @@ export default function SignUpForm({ navigation }) {
                         textContentType="emailAddress"
                         keyboardType="email-address"
                         autoCapitalize="none"
-                        onChangeText={(value) => checkEmail(value)}
+                        onChangeText={(value) => setEmail(value)}
                     />
                     <Gap height={20} />
                     <TextInputPassword
@@ -201,7 +296,7 @@ export default function SignUpForm({ navigation }) {
 const styles = StyleSheet.create({
     textBtn: {
         color: 'white',
-        fontSize: 14,
+        fontSize: 17,
         fontFamily: 'RobotoMedium',
         textAlign: 'center',
     },

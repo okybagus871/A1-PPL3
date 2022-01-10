@@ -1,14 +1,15 @@
 package service
 
 import (
-	"database/sql"
 	"context"
+	"database/sql"
 	"errors"
 	"time"
 
+	"BackEnd/datastruct"
+
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
-	"BackEnd/datastruct"
 	//"github.com/google/uuid"
 )
 
@@ -16,23 +17,22 @@ type UserService interface {
 	//masukin modul
 	SignUp(ctx context.Context, user datastruct.User) (*datastruct.User, error)
 	CheckUsernameAvailability(ctx context.Context, username string) (bool, error)
-	CheckEmailAvailability(ctx context.Context, email string)(bool, error)
+	CheckEmailAvailability(ctx context.Context, email string) (bool, error)
 	ValidateEmail(ctx context.Context, email string, otp uint32) (bool, error)
 	GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error)
-	GetUserPassword(ctx context.Context, email string)(string, error)
+	GetUserPassword(ctx context.Context, email string) (string, error)
 	UpdatePassword(ctx context.Context, email string, password string) error
 	UpdateUserProfile(ctx context.Context, user datastruct.User) (*datastruct.User, error)
 }
 
-type userService struct{
-	repo Repository
+type userService struct {
+	repo   Repository
 	logger log.Logger
 }
 
-
 func NewService(rep Repository, logger log.Logger) UserService {
 	return &userService{
-		repo: rep,
+		repo:   rep,
 		logger: logger,
 	}
 }
@@ -40,7 +40,7 @@ func NewService(rep Repository, logger log.Logger) UserService {
 var ErrEmpty = errors.New("empty string")
 
 func (s *userService) SignUp(ctx context.Context, user datastruct.User) (*datastruct.User, error) {
- 	logger := log.With(s.logger, "method", "CreateUser")
+	logger := log.With(s.logger, "method", "CreateUser")
 
 	// uuid, _ := uuid.NewUUID()
 	// user.UserID = uuid
@@ -54,7 +54,7 @@ func (s *userService) SignUp(ctx context.Context, user datastruct.User) (*datast
 	return &user, nil
 }
 
-func (s *userService) CheckUsernameAvailability(ctx context.Context, username string) (bool, error){
+func (s *userService) CheckUsernameAvailability(ctx context.Context, username string) (bool, error) {
 	logger := log.With(s.logger, "method", "CheckUsername")
 
 	isExist, err := s.repo.CheckUsername(ctx, username)
@@ -71,7 +71,7 @@ func (s *userService) CheckUsernameAvailability(ctx context.Context, username st
 	return true, nil
 }
 
-func (s *userService) CheckEmailAvailability(ctx context.Context, email string)(bool, error){
+func (s *userService) CheckEmailAvailability(ctx context.Context, email string) (bool, error) {
 	logger := log.With(s.logger, "method", "CheckEmail")
 
 	isExist, err := s.repo.CheckEmail(ctx, email)
@@ -89,7 +89,7 @@ func (s *userService) CheckEmailAvailability(ctx context.Context, email string)(
 }
 
 func (s *userService) ValidateEmail(ctx context.Context, email string, otp uint32) (bool, error) {
-	
+
 	logger := log.With(s.logger, "method", "ValidateEmail")
 
 	code, err := s.repo.ValidateEmail(ctx, email, otp)
@@ -101,8 +101,8 @@ func (s *userService) ValidateEmail(ctx context.Context, email string, otp uint3
 	if code != otp {
 		return false, err
 	}
-	
-	err2 := s.repo.UpdateEmailVerified(ctx, email) 
+
+	err2 := s.repo.UpdateEmailVerified(ctx, email)
 	if err2 != nil {
 		return false, err
 	}
@@ -111,7 +111,7 @@ func (s *userService) ValidateEmail(ctx context.Context, email string, otp uint3
 	return true, nil
 }
 
-func(s *userService) GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error){
+func (s *userService) GetUserByEmail(ctx context.Context, email string) (*datastruct.User, error) {
 	var user *datastruct.User
 	var err error
 
@@ -136,7 +136,7 @@ func(s *userService) GetUserByEmail(ctx context.Context, email string) (*datastr
 	return user, nil
 }
 
-func(s *userService) GetUserPassword(ctx context.Context, email string)(string, error){
+func (s *userService) GetUserPassword(ctx context.Context, email string) (string, error) {
 	logger := log.With(s.logger, "method", "GetUserPassword")
 
 	password, err := s.repo.GetUserPassword(ctx, email)
@@ -154,7 +154,7 @@ func(s *userService) GetUserPassword(ctx context.Context, email string)(string, 
 	return password, nil
 }
 
-func(s *userService) UpdatePassword(ctx context.Context, email string, password string) error {
+func (s *userService) UpdatePassword(ctx context.Context, email string, password string) error {
 	logger := log.With(s.logger, "method", "UpdatePassword")
 
 	err := s.repo.UpdatePassword(ctx, email, password)
@@ -167,7 +167,7 @@ func(s *userService) UpdatePassword(ctx context.Context, email string, password 
 	return nil
 }
 
-func(s *userService) UpdateUserProfile(ctx context.Context, user datastruct.User) (*datastruct.User, error) {
+func (s *userService) UpdateUserProfile(ctx context.Context, user datastruct.User) (*datastruct.User, error) {
 	logger := log.With(s.logger, "method", "UpdateUserProfile")
 
 	err := s.repo.UpdateUserProfile(ctx, user)

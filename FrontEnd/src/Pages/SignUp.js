@@ -88,7 +88,7 @@ export default function SignUp({ navigation }) {
 const styles = StyleSheet.create({
     textBtn: {
         color: 'white',
-        fontSize: 14,
+        fontSize: 17,
         fontFamily: 'RobotoMedium',
         textAlign: 'center',
     },

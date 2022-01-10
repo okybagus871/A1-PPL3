@@ -82,7 +82,7 @@ export default function CheckEmailToken({ navigation }) {
                     <Gap height={40} />
                     <Gap height={40} />
                     <TouchableOpacity style={styles.btn} onPress={onSubmit} disabled={otp ? false : true}>
-                        <Text style={styles.textBtn}>Create Account</Text>
+                        <Text style={styles.textBtn}>Verify Email</Text>
                     </TouchableOpacity>
                     <Gap height={100} />
                     <View style={styles.helpWrapper}>
@@ -102,7 +102,7 @@ export default function CheckEmailToken({ navigation }) {
 const styles = StyleSheet.create({
     textBtn: {
         color: 'white',
-        fontSize: 14,
+        fontSize: 17,
         fontFamily: 'RobotoMedium',
         textAlign: 'center',
     },

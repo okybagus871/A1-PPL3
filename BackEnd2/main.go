@@ -23,7 +23,7 @@ var err error
 
 func main() {
 
-	dsn := "host=localhost user=postgres password=admin dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	dsn := "host=103.157.96.115 user=raintea password=tadpole dbname=db_raintea port=5432 sslmode=disable TimeZone=Asia/Jakarta"
 	var httpAddr = flag.String("http", ":8080", "http listen address")
 
 	var logger log.Logger

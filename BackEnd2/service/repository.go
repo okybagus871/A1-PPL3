@@ -281,8 +281,9 @@ func (r *repo) UpdateUserProfile(ctx context.Context, user datastruct.User) erro
 			postal_code = $3,
 			identity_type = $4,
 			identity_no = $5,
-			emergency_call = $6
-			WHERE email = $7`
+			emergency_call = $6,
+			updated_date = $7
+			WHERE email = $8`
 	_, err := r.db.ExecContext(
 		ctx,
 		sql,
@@ -292,6 +293,7 @@ func (r *repo) UpdateUserProfile(ctx context.Context, user datastruct.User) erro
 		user.Identity_type,
 		user.Identity_no,
 		user.Emergency_call,
+		user.Updated_date,
 		user.Email)
 
 	if err != nil {
